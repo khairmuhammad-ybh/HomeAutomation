@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 
+// Redux
+import {Provider} from 'react-redux';
+import {store} from './redux/store';
+
 // React Navigation Stack
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
@@ -10,13 +14,17 @@ import SettingScreen from './screens/SettingScreen';
 
 class App extends Component {
   render() {
-    return <MyNav />;
+    return (
+      <Provider store={store}>
+        <MyNav />
+      </Provider>
+    );
   }
 }
 
 const AppNavigator = createStackNavigator({
   Home: HomeScreen,
-  Setting : SettingScreen
+  Setting: SettingScreen,
 });
 
 const MyNav = createAppContainer(AppNavigator);
