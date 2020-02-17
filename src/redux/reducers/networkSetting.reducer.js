@@ -24,7 +24,6 @@ const NetworkButtonStore = (state = initState, action) => {
         ...state,
         name: action.payload.name,
         ipAddr: action.payload.ipAddr,
-        connected: action.payload.connected,
       };
     case ACTION.UPDATE_CONNECTED_STATE:
       return {

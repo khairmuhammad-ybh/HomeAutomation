@@ -56,7 +56,6 @@ class SettingCard extends Component {
             NetworkConfigStore.update_network_state({
               name: connectName,
               ipAddr: connectIP,
-              connected: true,
             }),
           );
           this.props.navigation.goBack();

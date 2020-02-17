@@ -5,11 +5,12 @@ import {
   TouchableOpacity,
   ImageBackground,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 
 // Redux
 import {connect} from 'react-redux';
-import {store} from '../redux/store';
+import {store, persistor} from '../redux/store';
 import * as Actions from '../redux/actions';
 
 // Styles
@@ -22,6 +23,9 @@ import properties from '../utils/properties';
 import powerOff from '../assets/power_off.png';
 import powerOn from '../assets/power_on.png';
 
+// API
+import * as service from '../api/homeAuto.service';
+
 class HomeScreen extends Component {
   static navigationOptions = {
     headerShown: false,
@@ -31,6 +35,7 @@ class HomeScreen extends Component {
     super(prop);
     this.state = {
       connState: properties.connState_disconnected,
+      isLoading: false,
     };
   }
 
@@ -38,11 +43,25 @@ class HomeScreen extends Component {
     this._onFocusListener = this.props.navigation.addListener(
       'didFocus',
       payload => {
-        if (this.props.NetworkConfigState.connected) {
-          this.setState({connState: properties.connState_connected});
-        } else {
-          this.setState({connState: properties.connState_disconnected});
-        }
+        // persistor.purge()
+        this.setState({isLoading: true}); // invoke loading
+        service
+          .checkConnection(this.props.NetworkConfigState.ipAddr)
+          .then(result => {
+            let {resp} = result;
+            if (resp.status === 200) {
+              this.setState({isLoading: false}); // close loading
+              store.dispatch(Actions.update_connected_state({connected: true}));
+              this.setState({connState: properties.connState_connected});
+            }
+          })
+          .catch(err => {
+            // Logging error message
+            console.log(err);
+            this.setState({isLoading: false}); // close loading
+            store.dispatch(Actions.update_connected_state({connected: false}));
+            this.setState({connState: properties.connState_disconnected});
+          });
       },
     );
   }
@@ -213,12 +232,23 @@ class HomeScreen extends Component {
               <Image style={styles.image} source={btn8}></Image>
             </TouchableOpacity>
           </View>
-          {/* Navigate user to Setting screen */}
-          <TouchableOpacity
-            style={styles.touchLink}
-            onPress={() => this.props.navigation.navigate('Setting')}>
-            {<Text style={[styles.textLink]}>{this.state.connState}</Text>}
-          </TouchableOpacity>
+
+          {/* Loading screen */}
+          {this.state.isLoading ? (
+            <ActivityIndicator
+              style={styles.touchLink}
+              size="large"
+              color="#0000ff"
+            />
+          ) : (
+            /* Navigate user to Setting screen */
+            <TouchableOpacity
+              style={styles.touchLink}
+              onPress={() => this.props.navigation.navigate('Setting')}>
+              <Text style={[styles.textLink]}>{this.state.connState}</Text>
+            </TouchableOpacity>
+          )}
+
           {/* Footer */}
           <Text style={[styles.footer, styles.fontStyle]}>
             {`Developed By: ${properties.developer} @ ${properties.organization}`}
