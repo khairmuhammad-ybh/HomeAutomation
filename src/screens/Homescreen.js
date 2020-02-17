@@ -10,7 +10,7 @@ import {
 // Redux
 import {connect} from 'react-redux';
 import {store} from '../redux/store';
-import * as lightButtonActions from '../redux/actions';
+import * as Actions from '../redux/actions';
 
 // Styles
 import styles from '../styles/styles';
@@ -27,13 +27,33 @@ class HomeScreen extends Component {
     headerShown: false,
   };
 
+  constructor(prop) {
+    super(prop);
+    this.state = {
+      connState: properties.connState_disconnected,
+    };
+  }
+
+  componentDidMount() {
+    this._onFocusListener = this.props.navigation.addListener(
+      'didFocus',
+      payload => {
+        if (this.props.NetworkConfigState.connected) {
+          this.setState({connState: properties.connState_connected});
+        } else {
+          this.setState({connState: properties.connState_disconnected});
+        }
+      },
+    );
+  }
+
   onPresRedux = relay => {
     let {lightButtonState} = this.props;
     switch (parseInt(relay)) {
       case 1:
         {
           store.dispatch(
-            lightButtonActions.update_button_state({
+            Actions.update_button_state({
               button: 'btn1',
               state: !lightButtonState.btn1,
             }),
@@ -43,7 +63,7 @@ class HomeScreen extends Component {
       case 2:
         {
           store.dispatch(
-            lightButtonActions.update_button_state({
+            Actions.update_button_state({
               button: 'btn2',
               state: !lightButtonState.btn2,
             }),
@@ -53,7 +73,7 @@ class HomeScreen extends Component {
       case 3:
         {
           store.dispatch(
-            lightButtonActions.update_button_state({
+            Actions.update_button_state({
               button: 'btn3',
               state: !lightButtonState.btn3,
             }),
@@ -63,7 +83,7 @@ class HomeScreen extends Component {
       case 4:
         {
           store.dispatch(
-            lightButtonActions.update_button_state({
+            Actions.update_button_state({
               button: 'btn4',
               state: !lightButtonState.btn4,
             }),
@@ -73,7 +93,7 @@ class HomeScreen extends Component {
       case 5:
         {
           store.dispatch(
-            lightButtonActions.update_button_state({
+            Actions.update_button_state({
               button: 'btn5',
               state: !lightButtonState.btn5,
             }),
@@ -83,7 +103,7 @@ class HomeScreen extends Component {
       case 6:
         {
           store.dispatch(
-            lightButtonActions.update_button_state({
+            Actions.update_button_state({
               button: 'btn6',
               state: !lightButtonState.btn6,
             }),
@@ -93,7 +113,7 @@ class HomeScreen extends Component {
       case 7:
         {
           store.dispatch(
-            lightButtonActions.update_button_state({
+            Actions.update_button_state({
               button: 'btn7',
               state: !lightButtonState.btn7,
             }),
@@ -103,7 +123,7 @@ class HomeScreen extends Component {
       case 8:
         {
           store.dispatch(
-            lightButtonActions.update_button_state({
+            Actions.update_button_state({
               button: 'btn8',
               state: !lightButtonState.btn8,
             }),
@@ -197,7 +217,7 @@ class HomeScreen extends Component {
           <TouchableOpacity
             style={styles.touchLink}
             onPress={() => this.props.navigation.navigate('Setting')}>
-            <Text style={[styles.textLink]}>Not Connected</Text>
+            {<Text style={[styles.textLink]}>{this.state.connState}</Text>}
           </TouchableOpacity>
           {/* Footer */}
           <Text style={[styles.footer, styles.fontStyle]}>
@@ -211,6 +231,7 @@ class HomeScreen extends Component {
 
 const stp = store => {
   let {LightButton} = store;
+  let {NetworkConfig} = store;
 
   return {
     lightButtonState: {
@@ -222,6 +243,11 @@ const stp = store => {
       btn6: LightButton.btn6,
       btn7: LightButton.btn7,
       btn8: LightButton.btn8,
+    },
+    NetworkConfigState: {
+      name: NetworkConfig.name,
+      ipAddr: NetworkConfig.ipAddr,
+      connected: NetworkConfig.connected,
     },
   };
 };

@@ -7,6 +7,7 @@ import properties from '../../utils/properties';
 const initState = {
   name: properties.serverName,
   ipAddr: properties.serverIP,
+  connected: false,
 };
 
 const NetworkButtonStore = (state = initState, action) => {
@@ -14,14 +15,21 @@ const NetworkButtonStore = (state = initState, action) => {
     case ACTION.UPDATE_NETWORK_STATE:
       if (action.payload.name == null || action.payload.ipAddr == null) {
         Alert.alert(
-          'Please provide Name and IP Address \nfor your network to connect successfully',
+          properties.Err_Title_Empty_Field,
+          properties.Err_Messsage_Empty_Field,
         );
         return state;
       }
-      // TODO: Try to connect to server with IpAddr given by user
       return {
+        ...state,
         name: action.payload.name,
         ipAddr: action.payload.ipAddr,
+        connected: action.payload.connected,
+      };
+    case ACTION.UPDATE_CONNECTED_STATE:
+      return {
+        ...state,
+        connected: action.payload.connected,
       };
     default:
       return state;
