@@ -11,7 +11,7 @@
 * npm/npx
 * react-native
 * [react-native-debugger (opt) by jhen0409](https://github.com/jhen0409/react-native-debugger)
-* Server
+* Server (will upload to separate repo)
 
 ## Setup
 Git clone
