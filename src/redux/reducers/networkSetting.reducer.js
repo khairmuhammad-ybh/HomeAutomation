@@ -1,35 +1,49 @@
 import * as ACTION from '../actions/networkSetting.action';
-import {Alert} from 'react-native';
-
 // Properties
 import properties from '../../utils/properties';
 
 const initState = {
+  btnNetworkOnLoad: false,
+  connected: false,
   name: properties.serverName,
   ipAddr: properties.serverIP,
-  connected: false,
+  storedName: null,
+  storedIpAddr: null,
 };
 
-const NetworkButtonStore = (state = initState, action) => {
-  switch (action.type) {
-    case ACTION.UPDATE_NETWORK_STATE:
-      if (action.payload.name == null || action.payload.ipAddr == null) {
-        Alert.alert(
-          properties.Err_Title_Empty_Field,
-          properties.Err_Messsage_Empty_Field,
-        );
-        return state;
-      }
+const NetworkButtonStore = (state = initState, {type, payload}) => {
+  switch (type) {
+    case ACTION.UPDATE_NETWORK_DATA_STATE:
       return {
         ...state,
-        name: action.payload.name,
-        ipAddr: action.payload.ipAddr,
+        storedName: payload.storedName,
+        storedIpAddr: payload.storedIpAddr,
       };
-    case ACTION.UPDATE_CONNECTED_STATE:
+    case ACTION.BTN_NETWORK_STATE_ONLOAD: {
       return {
         ...state,
-        connected: action.payload.connected,
+        btnNetworkOnLoad: true,
       };
+    }
+    case ACTION.BTN_NETWORK_STATE_LOAD: {
+      return {
+        ...state,
+        ...payload,
+        btnNetworkOnLoad: false,
+      };
+    }
+    case ACTION.UPDATE_NETWORK_NAME_STATE: {
+      return {
+        ...state,
+        name: payload.name,
+      };
+    }
+    case ACTION.UPDATE_NETWORK_IP_STATE: {
+      return {
+        ...state,
+        ipAddr: payload.ipAddr,
+      };
+    }
     default:
       return state;
   }

@@ -1,6 +1,7 @@
-import * as ACTIONS from '../actions/lightButton.action';
+import * as ACTION from '../actions/lightButton.action';
 
 const initState = {
+  btnStateOnLoad: false,
   btn1: false,
   btn2: false,
   btn3: false,
@@ -11,12 +12,25 @@ const initState = {
   btn8: false,
 };
 
-const LightButtonStore = (state = initState, action) => {
-  switch (action.type) {
-    case ACTIONS.UPDATE_BUTTON_STATE: {
+const LightButtonStore = (state = initState, {type, payload}) => {
+  switch (type) {
+    case ACTION.UPDATE_SWITCH_BUTTON_STATE: {
       return Object.assign({}, state, {
-        [action.payload.button]: action.payload.state,
+        [payload.button]: payload.state,
       });
+    }
+    case ACTION.BTN_SWITCH_STATE_ONLOAD: {
+      return {
+        ...state,
+        btnStateOnLoad: true,
+      };
+    }
+    case ACTION.BTN_SWITCH_STATE_LOAD: {
+      return {
+        ...state,
+        ...payload,
+        btnStateOnLoad: false,
+      };
     }
     default:
       return state;

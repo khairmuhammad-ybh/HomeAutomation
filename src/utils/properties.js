@@ -1,3 +1,5 @@
+import mainBg from '../assets/background.png'
+
 const properties = {
   title: 'Home Automation Wireless Controller',
   developer: 'Jatizso',
@@ -6,7 +8,7 @@ const properties = {
   // server properties
   serverName: 'Localhost',
   serverIP: '127.0.0.1',
-  server_timeout: 10 * 1000,  // Server timeout
+  server_timeout: 3 * 1000, // Server timeout
 
   // Validations
   validateIP_regex:
@@ -15,6 +17,7 @@ const properties = {
   // General properties
   connState_connected: 'Connected',
   connState_disconnected: 'Not Connected',
+  mainBg : mainBg,
 
   // PORTS
   checkStatus_Port: '8664',

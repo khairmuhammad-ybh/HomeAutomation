@@ -14,24 +14,11 @@ import {createStackNavigator} from 'react-navigation-stack';
 import HomeScreen from './screens/Homescreen';
 import SettingScreen from './screens/SettingScreen';
 
-// Styles
-import styles from './styles/styles';
-
 class App extends Component {
-  renderLoading = () => {
-    <View style={styles.container}>
-      <ActivityIndicator
-        style={{position: 'absolute'}}
-        size="large"
-        color="#0000ff"
-      />
-    </View>;
-  };
-
   render() {
     return (
       <Provider store={store}>
-        <PersistGate persistor={persistor} loading={this.renderLoading()}>
+        <PersistGate persistor={persistor}>
           <MyNav />
         </PersistGate>
       </Provider>
