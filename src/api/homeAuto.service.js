@@ -6,7 +6,7 @@ import * as Actions from '../redux/actions';
 export const checkSwitchStatus = networkState => {
   return new Promise((resolve, reject) => {
     // Invoke Loading [ON]
-    if(networkState.periodic){
+    if (networkState.periodic) {
       store.dispatch(Actions.btn_switch_state_onload());
     }
     // axios fetch data from server
@@ -41,7 +41,7 @@ export const checkSwitchStatus = networkState => {
       })
       .catch(err => {
         // console.log(err); // For Debugging
-        
+
         // reject promise
         reject(err);
       });
@@ -83,7 +83,7 @@ export const checkNewConnection = data => {
 
 export const checkCurrentConnection = networkState => {
   // Invoke Loading [ON]
-  if(networkState.periodic){
+  if (networkState.periodic) {
     store.dispatch(Actions.btn_network_state_onload());
   }
   // axios check current connection to server
@@ -96,7 +96,7 @@ export const checkCurrentConnection = networkState => {
     })
       .then(resp => {
         let btnNetworkState = {
-          connected: true
+          connected: true,
         };
         // Invoke Loading [OFF]
         store.dispatch(Actions.btn_network_state_load(btnNetworkState));
@@ -106,11 +106,39 @@ export const checkCurrentConnection = networkState => {
         // console.log(err); // For Debugging
 
         let btnNetworkState = {
-          connected: false
+          connected: false,
         };
         // Invoke Loading [OFF]
         store.dispatch(Actions.btn_network_state_load(btnNetworkState));
         // reject promise
+        reject(err);
+      });
+  });
+};
+
+export const updateSwitch = switchData => {
+  // axios check current connection to server
+  return new Promise((resolve, reject) => {
+    let url = `http://${store.getState().NetworkConfig.storedIpAddr}:${properties.checkStatus_Port}/api/relays/`;
+    axios({
+      url: url,
+      method: 'POST',
+      timeout: properties.server_timeout,
+      data: {
+        switch: switchData.switch,
+        state: `${switchData.state}`,
+      },
+    })
+      .then(resp => {
+        store.dispatch(
+          Actions.update_switch_button_state({
+            button: `btn${switchData.switch}`,
+            state: switchData.state,
+          }),
+        );
+        resolve(resp);
+      })
+      .catch(err => {
         reject(err);
       });
   });

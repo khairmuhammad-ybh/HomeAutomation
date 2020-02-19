@@ -86,12 +86,16 @@ class HomeScreen extends Component {
 
   onPressReduxSwitch = btnName => {
     let {lightButtonState} = this.props;
-    store.dispatch(
-      Actions.update_button_state({
-        button: btnName,
-        state: !lightButtonState[btnName],
-      }),
-    );
+    // Extract number from string 'btnName'
+    let btnNum = btnName.match(/\d+/g);
+    services
+      .updateSwitch({switch: btnNum[0], state: !lightButtonState[btnName]})
+      .then(resp => {
+        // console.log(resp) //  For Debugging
+      })
+      .catch(err => {
+        // console.log(err) //  For Debugging
+      });
   };
 
   //  Set button state dynamically [true/false]
