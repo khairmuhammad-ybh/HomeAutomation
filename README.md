@@ -24,7 +24,7 @@ npm install
 ```
 
 ## Run project
-Go into `HomeAutomation` folder and run project
+Go into `HomeAutomation` directory and run project
 
 *For android*
 ```
