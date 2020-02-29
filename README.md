@@ -9,7 +9,7 @@
 * npm/npx
 * react-native
 * [react-native-debugger (opt) by jhen0409](https://github.com/jhen0409/react-native-debugger)
-* Server (will upload to separate repo)
+* [HomeAutomationServer](https://github.com/khairmuhammad-ybh/HomeAutomationServer)
 
 ## Setup
 Git clone
@@ -36,4 +36,4 @@ npm run ios
 ## Development / Extra
 - [x] Client application with *React native*
 - [X] Implement server (Rpi3 run in *Express* with Nodejs)
-- [ ] Server has yet to upload to github
+- [X] Server has yet to upload to github
